@@ -16,6 +16,7 @@ model Usuario {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Tanque    Tanque[]
+  peixe     Peixe[]
 }
 
 model Tanque {
@@ -30,8 +31,21 @@ model Tanque {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // Relacionamento com a tabela Usuario (usuário que criou o tanque)
   usuario Usuario @relation(fields: [userId], references: [id])
 
-  @@map("tanque") // Mapeia a tabela para o nome correto no banco de dados
+  @@map("tanque")
+}
+
+model Peixe {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  tipoPeixe   String   @map("tipo_peixe")
+  quantPeixe  String   @map("quant_peixe")
+  faseCriacao String   @map("fase_criacao")
+  createdAt   DateTime @default(now()) @map("created_At")
+  updatedAt   DateTime @updatedAt @map("update_At")
+
+  usuario Usuario @relation(fields: [userId], references: [id])
+
+  @@map("peixe")
 }
