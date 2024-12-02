@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../src/http/lib/prisma";
 import { Prisma } from "@prisma/client";
 
 export function createUser(app: FastifyInstance) {

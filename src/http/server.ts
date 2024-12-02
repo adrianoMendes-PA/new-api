@@ -1,6 +1,6 @@
 import fastify from "fastify";
-import { createUser } from "./routes/create-user";
-import { getUsers } from "./routes/get-users";
+import { createUser } from "../../api/create-user";
+import { getUsers } from "../../api/get-users";
 
 const app = fastify();
 
