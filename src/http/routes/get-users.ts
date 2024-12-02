@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { prisma } from "../lib/prisma";
 
 export async function getUsers(app: FastifyInstance) {
-  app.get("/usuario", async (request, reply) => {
+  app.get("/usuarios", async (request, reply) => {
     try {
       const usuarios = await prisma.usuario.findMany({
         select: {
