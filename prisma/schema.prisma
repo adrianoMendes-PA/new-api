@@ -15,4 +15,23 @@ model Usuario {
   estado    String   @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Tanque    Tanque[]
+}
+
+model Tanque {
+  id           String   @id @default(uuid())
+  userId       String
+  nomeTanque   String? // Nullable
+  largura      Decimal
+  profundidade Decimal
+  comprimento  Decimal
+  quantPeixe   String? // Nullable
+  tipoPeixe    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relacionamento com a tabela Usuario (usuário que criou o tanque)
+  usuario Usuario @relation(fields: [userId], references: [id])
+
+  @@map("tanque") // Mapeia a tabela para o nome correto no banco de dados
 }
