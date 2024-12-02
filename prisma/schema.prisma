@@ -9,7 +9,7 @@ datasource db {
 
 model Usuario {
   id        String   @id @default(uuid())
-  nome      String   @db.VarChar(50)
+  nome      String   @unique @db.VarChar(50)
   senha     String   @db.VarChar(255)
   cidade    String   @db.VarChar(50)
   estado    String   @db.VarChar(50)
