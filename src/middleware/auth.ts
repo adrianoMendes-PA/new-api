@@ -1,26 +1,50 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-interface CustomRequest extends Request {
-  user?: any;
+require("dotenv/config");
+
+import authConfig from "../config/auth";
+
+interface TokenPayload {
+  id: string;
+  iat: string;
+  exp: string;
 }
 
-// Middleware para verificar o token JWT
-export const verifyToken = (
-  req: CustomRequest, // Usando o tipo CustomRequest aqui
+export default function authUsuario(
+  req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+) {
+  const { authorization } = req.headers;
+
+  console.log("Authorization Header:", authorization);
+
+  if (!authorization) {
+    return res.status(401).json({ error: "Token não existe." });
+  }
+
+  // Extração do token
+  const token = authorization?.startsWith("Bearer ")
+    ? authorization.slice(7).trim()
+    : null;
+
+  console.log("Token capturado:", token);
+
   if (!token) {
-    return res.status(403).send({ error: "Token de autenticação ausente" });
+    return res.status(401).json({ error: "Formato de token inválido." });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
-    req.user = decoded;
-    next(); // Chama o próximo middleware ou rota
+    const data = jwt.verify(token, authConfig.secret);
+    console.log(data);
+    const { id } = data as unknown as TokenPayload;
+
+    req.userId = id;
+
+    return next();
   } catch (error) {
-    return res.status(401).send({ error: "Token inválido" });
+    console.error("Erro na verificação do token:", error);
+    return res.status(401).json({ error: "Token inválido." });
   }
-};
+}

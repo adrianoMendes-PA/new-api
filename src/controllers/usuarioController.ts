@@ -10,31 +10,33 @@ export const loginUsuario = async (req: Request, res: Response) => {
   try {
     const { nome, senha } = req.body;
 
+    // Validações
     if (!nome || !senha) {
       return res.status(400).send({ error: "Nome e senha são obrigatórios" });
     }
 
+    // Buscando usuário no banco de dados
     const usuario = await prisma.usuario.findUnique({
-      where: { nome: nome },
+      where: { nome },
     });
 
     if (!usuario) {
       return res.status(404).send({ error: "Usuário não encontrado" });
     }
 
-    // Verifica a senha fornecida com a senha criptografada
+    // Verificando a senha fornecida
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
       return res.status(401).send({ error: "Senha inválida" });
     }
 
-    // Gera o token JWT
-    const payload = { userId: usuario.id, nome: usuario.nome };
+    // Gerando o token JWT
+    const payload = { id: usuario.id, nome: usuario.nome };
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, {
       expiresIn: "24h",
     });
 
-    // Retorna os dados do usuário e o token
+    // Retornando o token e os dados do usuário
     return res.status(200).json({
       user: {
         id: usuario.id,
