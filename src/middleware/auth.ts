@@ -18,8 +18,6 @@ export default function authUsuario(
 ) {
   const { authorization } = req.headers;
 
-  console.log("Authorization Header:", authorization);
-
   if (!authorization) {
     return res.status(401).json({ error: "Token não existe." });
   }
@@ -28,8 +26,6 @@ export default function authUsuario(
   const token = authorization.startsWith("Bearer ")
     ? authorization.slice(7).trim()
     : null;
-
-  console.log("Token capturado:", token);
 
   if (!token) {
     return res.status(401).json({ error: "Formato de token inválido." });
