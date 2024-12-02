@@ -35,7 +35,6 @@ export function createUser(app: FastifyInstance) {
       return reply.status(201).send({ userId: usuario.id });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        // Verifica se o código do erro é P2002 (violação de chave única)
         if (error.code === "P2002") {
           return reply.status(409).send({ error: "Usuário já existe" });
         }
