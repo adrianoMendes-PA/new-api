@@ -3,7 +3,9 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// CRIA UM NOVO TANQUE
+/**
+ * Função para criar um tanque
+ */
 export const createTanque = async (req: Request, res: Response) => {
   try {
     const {
@@ -15,62 +17,39 @@ export const createTanque = async (req: Request, res: Response) => {
       tipoPeixe,
     } = req.body;
 
-    if (
-      !nomeTanque ||
-      !largura ||
-      !profundidade ||
-      !comprimento ||
-      !quantPeixe ||
-      !tipoPeixe
-    ) {
-      return res
-        .status(400)
-        .send({ error: "Todos os campos são obrigatórios" });
-    }
-
-    // Extraindo o userId do token (presumindo que o middleware de autenticação já tenha feito isso)
+    // Validar userId do token
     const userId = req.userId;
 
-    // Se o userId não estiver presente, significa que a autenticação falhou
     if (!userId) {
-      return res.status(403).send({ error: "Usuário não autenticado" });
+      return res.status(403).json({ error: "Usuário não autenticado." });
     }
 
-    // Verificando se já existe um tanque com o mesmo nome para o mesmo usuário
-    const existingTanque = await prisma.tanque.findFirst({
-      where: {
-        userId,
-        nomeTanque,
-      },
+    // Validar existência do usuário
+    const usuarioExistente = await prisma.usuario.findUnique({
+      where: { id: userId },
     });
 
-    if (existingTanque) {
-      return res
-        .status(400)
-        .send({ error: "Já existe um tanque com esse nome" });
+    if (!usuarioExistente) {
+      return res.status(400).json({ error: "Usuário não encontrado." });
     }
 
-    // Criando o novo tanque
+    // Criar tanque
     const tanque = await prisma.tanque.create({
       data: {
         userId,
-        nomeTanque,
+        nomeTanque: nomeTanque || null,
         largura,
         profundidade,
         comprimento,
-        quantPeixe,
+        quantPeixe: quantPeixe || null,
         tipoPeixe,
       },
     });
 
-    // Retornando o tanque criado com sucesso
-    return res.status(201).json({
-      message: "Tanque criado com sucesso!",
-      tanque,
-    });
+    return res.status(201).json({ tanque });
   } catch (error) {
     console.error("Erro ao criar tanque:", error);
-    return res.status(500).send({ error: "Erro interno ao criar tanque" });
+    return res.status(500).json({ error: "Erro interno ao criar tanque." });
   }
 };
 
