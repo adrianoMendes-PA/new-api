@@ -1,12 +1,12 @@
 import express from "express";
-import { usuarioRoutes } from "../routes/usuarios";
+import { usuarioRoutes } from "../routes/usuario";
 
 const app = express();
 
 app.use(express.json());
 
 // Usa o middleware de rotas
-app.use("/usuarios", usuarioRoutes);
+app.use("/usuario", usuarioRoutes);
 
 // Configura a porta e inicia o servidor
 const port = process.env.PORT || 4000;
