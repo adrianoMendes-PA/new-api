@@ -7,6 +7,15 @@ const app = fastify();
 app.register(createUser);
 app.register(getUsers);
 
-app.listen({ port: 8080 }).then(() => {
-  console.log("Server is running");
-});
+// Condição para rodar o servidor localmente
+if (process.env.NODE_ENV !== "production") {
+  app.listen({ port: 8080, host: "0.0.0.0" }, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Server is running at ${address}`);
+  });
+}
+
+export default app;
