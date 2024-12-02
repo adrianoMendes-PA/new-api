@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { prisma } from "../http/lib/prisma"; // Certifique-se do caminho correto para seu Prisma client
-import bcrypt from "bcrypt";
-import { z } from "zod"; // Biblioteca de validação
 
 // Controlador para listar usuários
 export const listUsuarios = async (req: Request, res: Response) => {
