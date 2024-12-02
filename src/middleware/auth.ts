@@ -7,8 +7,8 @@ import authConfig from "../config/auth";
 
 interface TokenPayload {
   id: string;
-  iat: string;
-  exp: string;
+  iat: number;
+  exp: number;
 }
 
 export default function authUsuario(
@@ -25,7 +25,7 @@ export default function authUsuario(
   }
 
   // Extração do token
-  const token = authorization?.startsWith("Bearer ")
+  const token = authorization.startsWith("Bearer ")
     ? authorization.slice(7).trim()
     : null;
 
@@ -35,10 +35,17 @@ export default function authUsuario(
     return res.status(401).json({ error: "Formato de token inválido." });
   }
 
+  // Verificação se o secret está configurado
+  if (!authConfig.secret) {
+    console.error("Erro: JWT_SECRET_KEY não configurado.");
+    return res.status(500).json({ error: "Erro de configuração interna." });
+  }
+
   try {
     const data = jwt.verify(token, authConfig.secret);
     console.log(data);
-    const { id } = data as unknown as TokenPayload;
+
+    const { id } = data as TokenPayload;
 
     req.userId = id;
 
