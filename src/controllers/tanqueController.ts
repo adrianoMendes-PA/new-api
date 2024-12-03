@@ -16,7 +16,6 @@ export const createTanque = async (req: Request, res: Response) => {
       quantPeixe,
       tipoPeixe,
     } = req.body;
-
     // Validar userId do token
     const userId = req.userId;
 
