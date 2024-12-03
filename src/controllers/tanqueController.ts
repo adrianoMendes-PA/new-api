@@ -85,6 +85,36 @@ export const getTanques = async (req: Request, res: Response) => {
   }
 };
 
+// LISTA O TOTAL DE TANQUES CADASTRADOS PELO USUÁRIO
+export const totalTanques = async (req: Request, res: Response) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(403).send({ error: "Usuário não autenticado" });
+    }
+
+    const tanques = await prisma.tanque.findMany({
+      where: {
+        userId: req.userId,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+    const count = await prisma.tanque.count({
+      where: {
+        userId: req.userId,
+      },
+    });
+    res.header("x-total-count", count.toString());
+    return res.json(tanques);
+  } catch (error) {
+    console.error("Erro ao totalizar tanques:", error);
+    return res.status(500).send({ error: "Erro interno ao totalizar tanques" });
+  }
+};
+
 // BUSCA UM TANQUE PELO ID
 export const getTanqueById = async (req: Request, res: Response) => {
   try {
@@ -99,7 +129,7 @@ export const getTanqueById = async (req: Request, res: Response) => {
     });
 
     if (!tanque) {
-      return res.status(404).json({ error: "Tanque não encontrado" });
+      return res.status(404).json({ error: "Tanque não encontrado..." });
     }
 
     return res.status(200).json(tanque);
@@ -109,6 +139,7 @@ export const getTanqueById = async (req: Request, res: Response) => {
   }
 };
 
+// DELETE TANQUE
 export const deleteTanque = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
