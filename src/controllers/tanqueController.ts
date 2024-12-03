@@ -62,11 +62,11 @@ export const getTanques = async (req: Request, res: Response) => {
       return res.status(403).send({ error: "Usuário não autenticado" });
     }
 
-    // Buscando os tanques cadastrados pelo usuário
     const tanques = await prisma.tanque.findMany({
       where: {
         userId,
       },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
 
     // Se não houver tanques cadastrados
