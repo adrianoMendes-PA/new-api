@@ -13,7 +13,7 @@ app.use("/tanque", tanqueRoutes);
 app.use("/peixe", peixeRoutes);
 
 // Configura a porta e inicia o servidor
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3030;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
