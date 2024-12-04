@@ -16,6 +16,7 @@ export const createTanque = async (req: Request, res: Response) => {
       quantPeixe,
       tipoPeixe,
     } = req.body;
+
     // Validar userId do token
     const userId = req.userId;
 
@@ -32,15 +33,30 @@ export const createTanque = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Usuário não encontrado." });
     }
 
+    // Converter e validar os dados
+    const larguraFloat = parseFloat(largura);
+    const profundidadeFloat = parseFloat(profundidade);
+    const comprimentoFloat = parseFloat(comprimento);
+    const quantPeixeInt = parseInt(quantPeixe, 10);
+
+    if (
+      isNaN(larguraFloat) ||
+      isNaN(profundidadeFloat) ||
+      isNaN(comprimentoFloat) ||
+      isNaN(quantPeixeInt)
+    ) {
+      return res.status(400).json({ error: "Dados inválidos." });
+    }
+
     // Criar tanque
     const tanque = await prisma.tanque.create({
       data: {
         userId,
         nomeTanque: nomeTanque || null,
-        largura,
-        profundidade,
-        comprimento,
-        quantPeixe: quantPeixe || null,
+        largura: larguraFloat,
+        profundidade: profundidadeFloat,
+        comprimento: comprimentoFloat,
+        quantPeixe: quantPeixeInt,
         tipoPeixe,
       },
     });
