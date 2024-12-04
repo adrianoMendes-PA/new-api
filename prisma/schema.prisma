@@ -15,26 +15,26 @@ model Usuario {
   estado    String   @db.VarChar(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // Tanque    Tanque[]
+  Tanque    Tanque[]
   peixe     Peixe[]
 }
 
-// model Tanque {
-//   id           String   @id @default(uuid())
-//   userId       String
-//   nomeTanque   String? // Nullable
-//   largura      Decimal
-//   profundidade Decimal
-//   comprimento  Decimal
-//   quantPeixe   Int?
-//   tipoPeixe    String
-//   createdAt    DateTime @default(now())
-//   updatedAt    DateTime @updatedAt
+model Tanque {
+  id           String   @id @default(uuid())
+  userId       String
+  nomeTanque   String? // Nullable
+  largura      Decimal
+  profundidade Decimal
+  comprimento  Decimal
+  quantPeixe   Int?
+  tipoPeixe    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-//   usuario Usuario @relation(fields: [userId], references: [id])
+  usuario Usuario @relation(fields: [userId], references: [id])
 
-//   @@map("tanque")
-// }
+  @@map("tanque")
+}
 
 model Peixe {
   id          String   @id @default(uuid())
